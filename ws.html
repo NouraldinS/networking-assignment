@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #mainInput {
+      width: 400px;
+      box-sizing: border-box;
+      margin: 0;
+      font-variant: tabular-nums;
+      list-style: none;
+      font-feature-settings: "tnum";
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      min-width: 0;
+      padding: 4px 11px;
+      color: #000000d9;
+      font-size: 14px;
+      line-height: 1.5715;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #d9d9d9;
+      border-radius: 2px;
+      transition: all .3s;
+    }
+    #result {
+      border-radius: 5px;
+      border: 1px solid #d9d9d9;
+      padding: 5px 8px;
+    }
+    #result::before {
+      content: 'Websocket message:';
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    Web Socket Example
+  </h1>
+  
+  <input id="mainInput" />
+  <p id="result">
+  </p>
+  
+  <script>
+    var ws = new WebSocket('ws://localhost:40510');
+
+    // Initialize connection with server's socket
+    ws.onopen = function () {
+      console.log('websocket is connected ...')
+      ws.send('connected');
+
+      // Listen for input change
+      document
+        .getElementById('mainInput')
+        .addEventListener('keyup', (keydownEvent) => {
+          const text = keydownEvent.target.value;
+
+          // Send input value to websocket
+          ws.send(text);
+        })
+    }
+
+    // Listen for websocket messages
+    ws.onmessage = function (event) {
+      console.log(event);
+      const data = event.data;
+      const resultParagraph = document.getElementById('result');
+      resultParagraph.textContent = data;
+    }
+  </script>
+</body>
+</html>
